@@ -1,0 +1,125 @@
+
+import java.io.*;
+import java.util.*;
+public class Main {
+
+	static Hashtable finaltable = new Hashtable();
+    public static File[] checkFile(String file_path, Hashtable dict)
+    {        
+        File mainFile = new File(file_path);
+        File[] simpleFile = mainFile.listFiles();
+        
+        String value;
+        
+        if(simpleFile == null)
+            return simpleFile;
+        for( File liFi : simpleFile){
+            if(liFi.isDirectory())
+            	checkFile(liFi.getAbsolutePath(), dict); 
+            	
+            else
+            	dict.put(liFi.getName(),liFi.getAbsolutePath());
+        }
+       return simpleFile;
+   }
+    public static String compareText(String f1, String f2)
+    {
+        File file1 = new File(f1);
+        File file2 = new File(f2);
+        StringBuilder result = new StringBuilder();  
+        
+        String finalRes;
+
+        try{
+        FileReader fR1 = new FileReader(file1);
+        FileReader fR2 = new FileReader(file2);
+
+        BufferedReader reader1 = new BufferedReader(fR1);
+        BufferedReader reader2 = new BufferedReader(fR2);
+
+        String line1 = null;
+        String line2 = null;
+        
+            while (((line1 = reader1.readLine()) != null)
+                &&((line2 = reader2.readLine()) != null)) 
+            {
+            	if (!line1.equals(line2)) {
+            		result.append("Different");
+            	} 
+            	else {
+            		result.append("Identical");
+            	}
+            }
+    
+        reader1.close();
+        reader2.close();
+        }
+        
+        catch(FileNotFoundException f)
+        {
+            System.out.println("Error in file" + f.toString()+ "\n");
+        }
+        catch(IOException e)
+        {
+            System.out.println("Error in file" + e.toString());
+        }
+        finalRes = result.toString();
+        if(finalRes.contains("Identical"))
+        	finalRes = "Identical";
+        else
+        	finalRes = "Identical";
+      return finalRes;
+    }
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("We are all set");
+		
+		System.out.println("\n \nThe solution \n");
+		File list1[];
+        File list2[];
+       
+        String str1 = "D:\\ComparisonFolder\\master\\";
+        String str2 = "D:\\ComparisonFolder\\release\\";
+        
+        Hashtable dict1 = new Hashtable();
+        Hashtable dict2 = new Hashtable();
+        
+        list1 = checkFile(str1, dict1);
+        list2 = checkFile(str2, dict2);
+        
+       String value;
+       Set<String> dict = dict1.keySet();
+        for(String key : dict )
+        {
+        	if(dict2.containsKey(key))
+        	{
+        		value = compareText(dict1.get(key).toString(), dict2.get(key).toString());
+        		finaltable.put(key, value);
+        	}
+        	else
+        		finaltable.put(key, "only in master");
+        }
+        
+        Set<String> dicty = dict2.keySet();
+        for(String key : dicty )
+        {
+        	if(finaltable.containsKey(key))
+        	{
+        		
+        	}
+        	else
+        		finaltable.put(key, "only in release");
+        }
+        
+       Set entrySet = finaltable.entrySet();
+       Iterator itr = entrySet.iterator();
+       
+       while(itr.hasNext())
+       {
+    	   System.out.println(itr.next());
+       }
+      
+		
+   }
+
+}
